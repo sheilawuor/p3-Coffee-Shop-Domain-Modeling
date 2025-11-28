@@ -19,5 +19,19 @@ class Customer:
     def coffees(self):
         return list(set(order.coffee for order in self._orders))
     
+    def create_order(self, coffee, price):
+        from order import Order
+        return Order(self, coffee, price)
+    
+    @classmethod
+    def most_aficionado(cls, coffee):
+        if not coffee.orders():
+            return None
+        customer_totals = {}
+        for order in coffee.orders():
+            customer = order.customer
+            customer_totals[customer] = customer_totals.get(customer, 0) + order.price
+        return max(customer_totals, key=customer_totals.get)
+    
     def add_order(self, order):
         self._orders.append(order)
